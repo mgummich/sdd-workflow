@@ -1,10 +1,26 @@
 # Walkthrough
 
-One feature from blank page to `done`. Example: adding a rate limiter to a login endpoint.
+> One feature from blank page to `done`. Example: rate-limiting a login endpoint.
 
-## Day 1 — Draft the spec
+## Timeline
 
-Copy the template, name the file:
+```mermaid
+gantt
+    title F001 — Login Rate Limit
+    dateFormat YYYY-MM-DD
+    section Spec
+    Draft        :done, d1, 2026-06-13, 1d
+    Review       :done, d2, 2026-06-14, 1d
+    section Code
+    Implement #1 :done, d3, 2026-06-15, 1d
+    Implement #2 :done, d4, 2026-06-16, 1d
+    section Done
+    Verify       :done, d5, 2026-06-17, 1d
+```
+
+---
+
+## Day 1 — Draft
 
 ```bash
 cp spec/features/F000-template.md spec/features/F001-login-rate-limit.md
@@ -19,44 +35,44 @@ complexity: L2
 architectureImpact: false
 ```
 
-Open Claude Code. It auto-loads `CLAUDE.md`, reads `spec/STATE.md`, finds `active_feature: null`. Tell it:
+Open Claude Code. It auto-loads `CLAUDE.md`, reads `STATE.md`, finds `active_feature: null`. You say:
 
 > Draft the spec for F001 — rate limit the login endpoint.
 
-Claude asks clarifying questions (window, threshold, response on block, what to do on Redis outage). Each answer flows into the spec sections. After 10 minutes you have:
+Claude asks clarifying questions (window, threshold, response on block, Redis outage behavior). Answers flow into spec sections:
 
 ```markdown
 ## Intent
-Limit login attempts per IP to slow credential stuffing. 5 attempts per 15 min window.
+Limit login attempts per IP to slow credential stuffing. 5/15min.
 
 ## Contracts
-- Endpoint: `POST /login`
-- Response 429 when over threshold; body `{ "error": "rate_limited", "retry_after": 600 }`
+- POST /login
+- 429 over threshold; body `{ "error": "rate_limited", "retry_after": 600 }`
 - Header `Retry-After: 600` on 429
-- Counter stored in Redis, key `login_rl:{ip}`, TTL 900s
+- Redis key `login_rl:{ip}`, TTL 900s
 
 ## Scenarios
-1. Under threshold — 5th attempt returns 200/401 as normal
-2. At threshold — 6th attempt within window returns 429
-3. After window — counter resets, 200/401 returned
-4. Redis outage — fail open (return 200/401), log warning
+1. Under threshold — 5th attempt returns 200/401
+2. At threshold — 6th attempt returns 429
+3. After window — counter resets
+4. Redis outage — fail open, log warning
 
 ## Acceptance Criteria
-- [ ] 6th attempt in window returns 429 with Retry-After header
+- [ ] 6th attempt returns 429 with Retry-After
 - [ ] Counter expires at TTL
-- [ ] Redis outage does not block logins (logged warning)
+- [ ] Redis outage does not block logins
 - [ ] Tests cover all 4 scenarios
 ```
 
-## Day 2 — Review and approve
+## Day 2 — Review & approve
 
-Re-read the spec yourself. Ask Claude:
+Ask Claude:
 
-> Review this spec — edge cases I missed, contracts that aren't fully defined.
+> Review this spec — edge cases I missed, contracts not fully defined.
 
-It surfaces: what about IPv6 prefix collapsing? Logged-in users — same limit?
+It surfaces: IPv6 prefix? Logged-in users limited?
 
-You decide: IPv6 use /64 prefix; logged-in users not limited. Add to the spec. Set `status: approved`.
+You decide: IPv6 /64 prefix; logged-in users not limited. Add to spec. Set `status: approved`.
 
 Update `spec/STATE.md`:
 
@@ -71,11 +87,9 @@ load:
 
 ## Day 3 — Implement (session 1)
 
-Open Claude. It reads STATE, loads the rules + the spec, confirms `status: approved`.
-
 > Implement F001.
 
-Claude writes tests first (one per scenario), then the middleware, then wires it into the login route. End of session, it appends:
+Claude writes tests first, then middleware, wires into route. End of session:
 
 ```markdown
 ## Progress
@@ -84,16 +98,16 @@ Claude writes tests first (one per scenario), then the middleware, then wires it
 - Done: Tests for all 4 scenarios; middleware in src/middleware/rate-limit.ts
 - Files: src/middleware/rate-limit.ts, tests/rate-limit.test.ts, src/routes/login.ts
 - Decision: Used existing Redis client; no new deps
-- Next: Wire IPv6 /64 prefix logic (not yet done)
+- Next: IPv6 /64 prefix logic
 ```
 
 ## Day 4 — Implement (session 2)
 
-You close your laptop, come back the next day. Open Claude. It reads STATE → loads the spec → sees the Progress log → knows where to resume.
+Next day. Open Claude. It reads STATE → loads spec → sees Progress → knows where to resume.
 
 > Continue F001.
 
-Claude implements the IPv6 prefix logic. Tests pass. Appends:
+Claude implements IPv6 prefix logic. Tests pass.
 
 ```markdown
 **2026-06-16**
@@ -106,14 +120,14 @@ Claude implements the IPv6 prefix logic. Tests pass. Appends:
 
 > Verify F001.
 
-Claude walks the `## Acceptance Criteria` checklist, runs `pnpm test`, captures the green output, appends:
+Claude walks AC, runs `pnpm test`, captures green output:
 
 ```markdown
 **2026-06-17**
 - Done: Verified. AC all green.
 ```
 
-Flip `status: done`. Update `spec/STATE.md`:
+Flip `status: done`. Reset STATE:
 
 ```yaml
 ---
@@ -122,13 +136,22 @@ load: []
 ---
 ```
 
-Commit, push, open PR. The PR template links the spec; the AC checklist becomes the review checklist.
+Commit, push, open PR. PR template links the spec; AC checklist becomes the review checklist.
 
-## What just happened
+---
 
-- Spec was the source of truth; implementation matched it.
-- Context survived a 24-hour gap (Day 3 → Day 4) because STATE + Progress carried it.
-- One sticky decision (Redis client reuse) was captured in Progress, not lost in chat history.
-- AC drove tests, tests gated the merge.
+## What happened
+
+```mermaid
+flowchart LR
+    S[Spec] -.source of truth.-> I[Implementation]
+    P[Progress log] -.context bridge.-> R[Resume next day]
+    AC[AC checklist] -.gates.-> M[Merge]
+```
+
+- Spec drove implementation; nothing diverged.
+- Context survived the Day 3 → Day 4 gap via STATE + Progress.
+- One sticky decision (Redis client reuse) captured in Progress, not lost in chat.
+- AC drove tests, tests gated merge.
 
 Next feature: copy template → F002. Same loop.
