@@ -1,46 +1,65 @@
 # SDD Workflow Template
 
-A minimal, token-optimized **Spec-Driven Development** template for consistent AI-assisted projects.
+Minimal spec-driven development template for AI-assisted projects. Optimized for [Claude Code](https://docs.claude.com/en/docs/claude-code) and [Codex](https://openai.com/codex).
 
-## Use this template
+## What it gives you
 
-Click **"Use this template"** → "Create a new repository" on GitHub.
+- A short, stable workflow: `Spec → Approve → Implement → Verify`
+- Per-feature specs as the source of truth (Markdown, in-repo)
+- A token-efficient context contract for LLMs
+- Provider bootstraps (`CLAUDE.md`, `AGENTS.md`) the agents auto-load
 
-## What's inside
+## Quick start
+
+1. Click **Use this template** → create a new repo.
+2. Edit `spec/00-constitution.md` — replace `<TODO>` markers (stack, test command, lint command).
+3. Delete the provider file you don't use (`CLAUDE.md` or `AGENTS.md`).
+4. Open your agent. It reads `CLAUDE.md` / `AGENTS.md`, sees `active_feature: null`, and asks which feature to start.
+5. Copy `spec/features/F000-template.md` → `spec/features/F001-<your-feature>.md`, draft, approve, implement.
+
+Full walkthrough: [`docs/walkthrough.md`](docs/walkthrough.md).
+
+## Layout
 
 ```
-spec/
-├── 00-constitution.md      # Project-wide principles (edit for your stack)
-├── 01-rules-llm.md         # Token-optimized rules for LLMs (stable)
-├── STATE.md                # Context compression between work waves
-├── features/
-│   └── F000-template.md    # Feature spec template
-└── adr/
-    └── ADR-000-template.md # Architecture decision template
+.
+├── CLAUDE.md          # Claude Code bootstrap
+├── AGENTS.md          # Codex bootstrap
+├── docs/              # User-facing guides
+│   ├── quickstart.md
+│   ├── walkthrough.md
+│   └── faq.md
+├── spec/
+│   ├── 00-constitution.md   # Project principles, workflow, gates
+│   ├── 01-rules-llm.md      # Provider-agnostic LLM rules
+│   ├── STATE.md             # Pointer to the active feature
+│   ├── features/F000-template.md
+│   └── adr/ADR-000-template.md
+└── .github/           # Issue forms + PR template
 ```
 
 ## Workflow
 
 ```
-Spec → Plan → Tasks → Implement → Verify
+Spec → Approve → Implement → Verify
 ```
 
-1. Open a **Feature Spec** issue (from issue templates)
-2. Copy `spec/features/F000-template.md` → `spec/features/F001-<name>.md`
-3. Fill in Intent, Scope, Business Rules, Contracts, Scenarios, AC
-4. Implement code + tests against the spec
-5. PR must link the spec; acceptance criteria must be green
+Status: `draft → approved → done`.
 
-See [`spec/README.md`](spec/README.md) for full usage guide.
+Two gates:
 
-## LLM context
+- **Status gate** — no code until `status: approved`
+- **Spec-delta gate** — if implementation reveals a spec gap, stop and propose a spec delta
 
-Minimal context per task:
+That's the whole thing.
 
-```
-Load:
-- spec/01-rules-llm.md
-- spec/features/F001-<feature-name>.md
-```
+## Docs
 
-Never load the full repo. See `spec/01-rules-llm.md` for token optimization rules.
+- [Quickstart](docs/quickstart.md) — 5-minute setup
+- [Walkthrough](docs/walkthrough.md) — one feature from spec to done
+- [FAQ](docs/faq.md) — design choices, common questions
+- [`spec/README.md`](spec/README.md) — in-repo workflow reference
+
+## License
+
+MIT.
