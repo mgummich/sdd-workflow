@@ -1,108 +1,86 @@
-# 01 – Rules for LLMs (Token-Optimized)
+# 01 — Rules for LLMs
 
-This file is your primary context. Keep it small (< 1–2 pages).
+> Provider-agnostic. Runtime-specific rules: see `CLAUDE.md` or `AGENTS.md`.
 
-## 0. Token Optimization Principles
+## 1. Role
 
-**Always optimize token usage:**
-- **Never load full files unnecessarily** – use search/outlines first, then snippets.
-- **Prefer structured output** (JSON, typed lists) over natural language.
-- **Don't repeat rules** – reference this file instead of re-copying instructions.
-- **Compress context** after each wave (write STATE.md summaries).
-- **Cache/reuse** existing artifacts instead of re-generating.
+Turn specs into code and tests. Specs are the source of truth. If something is unclear or contradictory, **ask** — never guess.
 
-**If approaching budget limits:**
-- >50% budget used → compress context, use summaries.
-- Re-reading same files? → use existing summaries instead.
-- Can I use outline instead of full file? → yes, always prefer outlines.
+## 2. Session start
 
-## 1. Role & Priorities
+1. Read `spec/STATE.md`.
+2. If `active_feature` is set, read every path in `load:` before doing anything else.
+3. Keep the active feature spec pinned in working memory for the whole session.
 
-- You are an assistant that **turns specifications into code and tests**.
-- Specs are always the source of truth. If existing code conflicts with a spec, the spec wins.
-- If something is unclear or contradictory: **ask for clarification instead of guessing**.
+If `active_feature: null`, ask which feature to work on.
 
-## 2. Which files you should load
+## 3. Load discipline
 
-For a concrete task:
+- Load `spec/01-rules-llm.md` + the active feature spec. Read other files only when the current task demands it.
+- Search/snippets before full reads.
+- Never load the full repo by default.
 
-1. **Always** load:
-   - `spec/01-rules-llm.md` (this file)
-   - the relevant feature spec in `spec/features/Fxxx-*.md`
+## 4. Status gate
 
-2. **Only when needed**:
-   - `spec/architecture/*.md` if the feature has `architectureImpact: true`
-   - `spec/adr/ADR-*.md` if the feature spec explicitly references an ADR
+```
+draft → approved → done
+```
 
-3. **Never** load by default:
-   - The entire repo
-   - Full files unless you've confirmed they're needed
-   - Conversation history beyond recent turns + summary
+- `draft` — refine the spec only. No implementation.
+- `approved` — implementation green-lit.
+- `done` — read-only.
 
-**Search before loading:**
-- Use search/outlines to find relevant code before reading full files.
-- Load only the relevant snippets (e.g., lines 45–80, not full 400-line file).
+Check status before writing any code.
 
-## 3. How to work with feature specs
+## 5. Spec-delta gate
 
-Feature specs always follow this structure:
+If implementation reveals a spec gap or contradiction:
 
-- `Intent` – what the feature should achieve in business terms.
-- `Scope` – what is in scope and explicitly out of scope.
-- `Business Rules` – domain rules that must hold.
-- `Contracts` – API shapes, data structures, events.
-- `Scenarios` – Given/When/Then cases.
-- `Acceptance Criteria` – checklist to be enforced by tests.
+1. Stop.
+2. Propose a **spec delta** — concrete changes to the spec sections that need updating.
+3. Wait for the human to update the spec.
+4. Resume.
 
-Your process:
+## 6. Working with feature specs
 
-1. **Understand** Intent, Scope, Business Rules and Contracts.
-2. **Derive tests** from Scenarios and Acceptance Criteria.
-3. **Implement code** to satisfy those tests, without breaking any Contracts.
+Feature specs always have:
 
-## 4. Code style & tests (short version)
+`Intent`, `Scope`, `Business Rules`, `Contracts`, `Scenarios`, `Acceptance Criteria`, optional `Implementation Notes`, `Progress`.
 
-- Preferred stack is defined per project (e.g., TypeScript, Python).
-- Code should be:
-  - small, well-named, testable, and free of unnecessary globals,
-  - structured so side effects (I/O, network) are isolated in dedicated layers.
+Process:
 
-Tests:
+1. Understand Intent, Scope, Business Rules, Contracts.
+2. Derive tests from Scenarios + AC.
+3. Implement to satisfy those tests without breaking Contracts.
 
-- Write or update tests first.
-- Cover all Acceptance Criteria from the spec.
-- Use clear test names that describe observable behavior.
+## 7. Code & tests
 
-## 5. Output formatting
+- Stack defined per project (see constitution).
+- Code: small, well-named, testable; side effects (I/O, network) isolated.
+- Tests: cover every AC, names describe observable behavior, write tests first.
 
-- **Always use structured output** where possible:
-  - JSON for classifications, lists, mappings.
-  - Typed structures for tasks, files, changes.
-- **Avoid verbose natural language** unless explicitly requested.
+## 8. Output format
 
-Examples:
-- Instead of: "I think we should create three files: auth.ts, login.ts, and validate.ts"
-- Use: `{"files": ["auth.ts", "login.ts", "validate.ts"]}`
+- Structured output (JSON, typed lists) over prose.
+- Example: `{"files": ["auth.ts", "login.ts"]}` not "I think we should create three files…".
 
-## 6. Things you must NOT do
+## 9. Hard rules
 
-- Do not change any API signatures defined in `Contracts` on your own.
-- Do not introduce new technologies/frameworks that are not already part of the project.
-- Do not "optimize" in ways that violate the spec, even if they seem technically attractive.
+- No changes to Contracts without a spec delta.
+- No new frameworks/libraries not already in the project.
+- No "optimizations" that violate the spec.
 
-## 7. Context compression after each wave
+## 10. End of session
 
-After completing a wave of work:
+1. Append a Progress entry to the active feature spec:
 
-- Write a short `STATE.md` with:
-  - What's implemented.
-  - What's pending.
-  - Key constraints and decisions.
-- Use that summary for the next wave instead of full history.
+   ```markdown
+   **YYYY-MM-DD**
+   - Done: …
+   - Files: …
+   - Decision: … (only if non-obvious)
+   - Next: …
+   ```
 
-## 8. Versioning
-
-If a spec or contract appears outdated or incorrect:
-
-- do not silently adjust behavior,
-- instead, draft a suggested spec change ("spec delta") that a human can review and apply.
+2. Update `spec/STATE.md` if the active feature changed.
+3. On verify: append `Verified. AC all green.`, flip `status: done`.

@@ -1,68 +1,58 @@
 # Spec-Driven Development (SDD) Skeleton
 
-This is your minimal, token-optimized SDD skeleton for consistent projects.
+Minimal SDD template for AI-assisted projects. Optimized for Claude Code; works with Codex via `AGENTS.md`.
 
 ## Files
 
-### Core (always present)
-- `spec/00-constitution.md` – Project-wide principles and rules
-- `spec/01-rules-llm.md` – Token-optimized rules for LLMs
-- `spec/STATE.md` – Context compression between work waves
+### Core
 
-### Templates
-- `spec/features/F000-template.md` – Feature spec template
-- `spec/adr/ADR-000-template.md` – Architecture decision template
+- `spec/00-constitution.md` — project principles, workflow, status rules
+- `spec/01-rules-llm.md` — provider-agnostic rules for LLMs
+- `spec/STATE.md` — pointer to the active feature (what to load)
 
-## How to use
+### Templates (stencils — copy, don't edit)
 
-### For a new project
-1. Copy this skeleton into your repo.
-2. Update `spec/00-constitution.md` with your project's tech stack and rules.
-3. Update `spec/01-rules-llm.md` to reference your existing skills (BMAD, SDD-methodology, etc.).
+- `spec/features/F000-template.md` — feature spec template
+- `spec/adr/ADR-000-template.md` — architecture decision template
 
-### For each new feature
-1. Copy `spec/features/F000-template.md` → `spec/features/F001-<feature-name>.md`.
-2. Fill in Intent, Scope, Business Rules, Contracts, Scenarios, Acceptance Criteria.
-3. Set `complexity`:
-   - `L1` = trivial (no ADR needed)
-   - `L2` = normal (ADRs if architecture affected)
-   - `L3` = architecture-impact (ADR required)
+### Provider bootstraps (root of repo)
 
-### When working with LLMs
-Minimal context per task:
-```
-Load:
-- spec/01-rules-llm.md
-- spec/features/F001-<feature-name>.md
-(Optionally: 1–2 architecture/ADR files if architectureImpact: true)
-```
-
-## Token optimization checklist
-
-Before each LLM-assisted task:
-- ✅ Use spec-first (rules + 1 spec) instead of full repo
-- ✅ Search before loading files
-- ✅ Use outline instead of full file where possible
-- ✅ Produce structured output (JSON, typed lists)
-- ✅ Don't repeat rules in the prompt
-- ✅ Compress context after each wave (update STATE.md)
-- ✅ Cache/reuse existing artifacts instead of re-generating
+- `CLAUDE.md` — Claude Code auto-loads this
+- `AGENTS.md` — Codex auto-loads this
 
 ## Workflow
 
-Per feature: `Spec → Plan → Tasks → Implement → Verify`
+```
+Spec → Approve → Implement → Verify
+```
 
-- **Spec**: `spec/features/Fxxx-*.md`
-- **Plan**: optional plan.md with task breakdown
-- **Tasks**: tasks.md with checkboxes and acceptance criteria
-- **Implement**: code + tests following the spec
-- **Verify**: CI passes, tests cover all acceptance criteria
+Status: `draft → approved → done`.
 
-## Architecture decisions
+Per feature:
 
-ADRs only for:
-- Hard to reverse
-- Long-term impact
-- Multiple teams/domains
+1. Copy `spec/features/F000-template.md` → `spec/features/F001-<name>.md`.
+2. Fill Intent, Scope, Business Rules, Contracts, Scenarios, AC. Set `status: draft`.
+3. Review with LLM and humans. Refine spec until ready. Flip `status: approved`.
+4. Update `spec/STATE.md` — set `active_feature: F001` and `load:`.
+5. Implement. LLM appends `## Progress` entries each session.
+6. Verify: walk AC checklist, run tests, append final Progress entry, flip `status: done`.
 
-Format: `spec/adr/ADR-xxx-*.md` (1–2 pages, status: Proposed → Accepted → Deprecated/Superseded)
+ADRs: only for decisions that are hard to reverse, long-term impact, or span multiple teams.
+
+## When using as a template
+
+- Keep `F000-template.md` and `ADR-000-template.md` — they're stencils.
+- Reset `spec/STATE.md` to `active_feature: null`.
+- Replace `<TODO>` markers in `spec/00-constitution.md`.
+- Pick provider files: `CLAUDE.md`, `AGENTS.md`, or both. Delete what you don't use.
+
+## LLM context per task
+
+Minimum:
+
+```
+spec/01-rules-llm.md
+spec/features/F00x-<name>.md
+```
+
+Don't load the full repo. See `spec/01-rules-llm.md` for full rules.

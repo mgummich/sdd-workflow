@@ -1,31 +1,28 @@
-# F000: [Feature Name]
+---
+id: F000
+status: draft        # draft | approved | done
+complexity: L1       # L1 trivial | L2 normal | L3 architecture-impact
+architectureImpact: false
+---
 
-metadata:
-  id: F000
-  status: draft        # draft | approved | implemented
-  complexity: L1       # L1 = trivial, L2 = normal, L3 = architecture-impact
-  architectureImpact: false
+# F000: [Feature Name]
 
 ## Intent
 
-Short description in 1–3 sentences:
-- What should this feature achieve from a business perspective?
-- Which user/problem does it serve?
+What should this feature achieve from a business perspective? Which user/problem does it serve? 1–3 sentences.
 
 ## Scope
 
-- In scope:
-  - Item 1
-  - Item 2
-- Out of scope:
-  - Item A
-  - Item B
+**In scope:**
+- …
+
+**Out of scope:**
+- …
 
 ## Business Rules
 
 - Rule 1: …
 - Rule 2: …
-- Rule 3: …
 
 ## Contracts
 
@@ -42,30 +39,37 @@ Short description in 1–3 sentences:
   - Fields: id, email, …
   - Invariants: email must be unique, etc.
 
-## Scenarios (Given / When / Then)
+## Scenarios
 
-1. Scenario 1 – [Title]  
-   Given …  
-   When …  
+1. **[Title]**
+   Given …
+   When …
    Then …
 
-2. Scenario 2 – [Title]  
-   Given …  
-   When …  
+2. **[Title]**
+   Given …
+   When …
    Then …
 
-## Acceptance Criteria (Checklist)
+## Acceptance Criteria
 
-- [ ] Critical business rules are covered by automated tests.
-- [ ] All `Contracts` are implemented exactly as specified.
-- [ ] All scenarios are implemented as automated tests.
-- [ ] Negative paths (errors, edge cases) are tested.
-- [ ] Logging/observability is present where needed.
+- [ ] Critical business rules covered by automated tests
+- [ ] All Contracts implemented exactly as specified
+- [ ] All scenarios implemented as automated tests
+- [ ] Negative paths (errors, edge cases) tested
 
 ## Implementation Notes (optional)
 
-Only use this section for information that does not fit Business Rules/Contracts,
-for example:
-- technical constraints,
-- migration notes,
-- known limitations.
+Technical constraints, migration notes, known limitations.
+
+## Progress
+
+> Appended during implementation. Append-only.
+
+<!--
+**YYYY-MM-DD**
+- Done: …
+- Files: …
+- Decision: … (only if non-obvious)
+- Next: …
+-->
