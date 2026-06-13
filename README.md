@@ -3,19 +3,22 @@
 > Minimal spec-driven development template for AI-assisted projects.
 > Optimized for **Claude Code** and **Codex**.
 
-[![Template](https://img.shields.io/badge/GitHub-Template-blue?logo=github)](https://github.com/new?template_name=sdd-workflow)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#license)
 
 ---
 
-## What it gives you
+## What is spec-driven development?
+
+You write a short spec **before** the code. The spec defines what's in scope, the contract, the scenarios, and what "done" looks like. The AI implements against the spec. If reality and spec disagree, you fix the spec first. That's it.
+
+## What this template gives you
 
 | | |
 |---|---|
-| 🧭 | A short, stable workflow: `Spec → Approve → Implement → Verify` |
-| 📜 | Per-feature specs as the source of truth (Markdown, in-repo) |
-| 🪙 | Token-efficient context contract for LLMs |
-| 🤖 | Provider bootstraps (`CLAUDE.md`, `AGENTS.md`) the agents auto-load |
+| 🧭 | A short workflow: `Spec → Approve → Implement → Verify` |
+| 📜 | Per-feature specs as the source of truth — plain Markdown, in your repo |
+| 🪙 | A small, fixed context for every LLM call (no token bloat) |
+| 🤖 | Provider files (`CLAUDE.md`, `AGENTS.md`) the AI loads automatically |
 
 ## Workflow at a glance
 
@@ -40,20 +43,24 @@ stateDiagram-v2
     approved --> draft : spec delta needed
 ```
 
-Two gates, that's it:
+Two rules:
 
 - **Status gate** — no code until `status: approved`
 - **Spec-delta gate** — if implementation reveals a spec gap, stop and propose a spec delta
 
 ## Quick start
 
-1. Click **Use this template** → create a new repo
-2. Edit `spec/00-constitution.md` — replace `<TODO>` markers (stack, test, lint)
-3. Delete the provider file you don't use (`CLAUDE.md` or `AGENTS.md`)
-4. Open your agent — it reads the bootstrap, sees `active_feature: null`, asks which feature to start
-5. Copy `spec/features/F000-template.md` → `F001-<name>.md`, draft, approve, implement
+1. Click **Use this template** on GitHub → create your repo, clone it
+2. Open `spec/00-constitution.md` and fill in your stack (test command, lint command)
+3. Keep the provider file your AI uses; delete the other:
+   - Claude Code → keep `CLAUDE.md`
+   - Codex → keep `AGENTS.md`
+4. Open your AI in the repo. It reads the provider file, then `spec/STATE.md`, finds `active_feature: null`, and asks which feature to start
+5. Copy `spec/features/F000-template.md` → `F001-<your-feature>.md`
+6. Fill in the spec with the AI's help (Intent, Scope, Contracts, Scenarios, AC)
+7. Flip `status: approved` → ask the AI to implement → walk the AC checklist → flip `status: done`
 
-Full guide: [`docs/quickstart.md`](docs/quickstart.md)
+Full guide: [`docs/quickstart.md`](docs/quickstart.md). Worked example: [`docs/walkthrough.md`](docs/walkthrough.md).
 
 ## Layout
 
@@ -63,12 +70,12 @@ Full guide: [`docs/quickstart.md`](docs/quickstart.md)
 ├── AGENTS.md          # Codex bootstrap
 ├── docs/              # User-facing guides
 ├── spec/
-│   ├── 00-constitution.md   # Principles, workflow, gates
-│   ├── 01-rules-llm.md      # Provider-agnostic LLM rules
+│   ├── 00-constitution.md   # Project principles, workflow, gates
+│   ├── 01-rules-llm.md      # Rules the LLM loads every session
 │   ├── STATE.md             # Pointer to the active feature
 │   ├── features/F000-template.md
 │   └── adr/ADR-000-template.md
-└── .github/           # Issue forms + PR template
+└── .github/           # Bug template + PR template
 ```
 
 ## Docs
