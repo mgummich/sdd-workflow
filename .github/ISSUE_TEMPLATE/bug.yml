@@ -1,0 +1,38 @@
+name: Bug Report
+description: Something doesn't match the spec
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: input
+    id: spec-ref
+    attributes:
+      label: Related Spec
+      placeholder: "F001 – Feature Name"
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected (per spec)
+      placeholder: "What the spec says should happen"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+      placeholder: "What actually happens"
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
