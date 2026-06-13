@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-    <img src="assets/logo-light.svg" alt="SDD Workflow" width="120" height="120">
+    <img src="assets/logo-light.svg" alt="SDD Workflow" width="140" height="140">
   </picture>
 </p>
 
