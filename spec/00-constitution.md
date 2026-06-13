@@ -7,6 +7,7 @@
 - **Language/runtime:** `<TODO: tech-stack>`
 - **Test command:** `<TODO: test-command>`
 - **Lint command:** `<TODO: lint-command>`
+- **Pre-commit:** `<TODO: pre-commit-command or n/a>`
 
 ## 1. Spec-Driven Development
 
@@ -47,6 +48,7 @@ Artifacts per feature:
 ## 3. Git & Commits
 
 - Conventional Commits (feat, fix, docs, refactor, test, chore).
+- Trunk-based: short-lived feature branches off `main`, merged via PR.
 - No code goes directly to `main`/`trunk` without tests.
 - `--no-verify` is not part of the normal workflow.
 

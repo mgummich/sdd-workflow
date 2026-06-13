@@ -57,6 +57,8 @@ What should this feature achieve from a business perspective? Which user/problem
 - [ ] All Contracts implemented exactly as specified
 - [ ] All scenarios implemented as automated tests
 - [ ] Negative paths (errors, edge cases) tested
+- [ ] Security: no new secrets committed, inputs validated at boundaries
+- [ ] Performance: no regression vs baseline (where applicable)
 
 ## Implementation Notes (optional)
 

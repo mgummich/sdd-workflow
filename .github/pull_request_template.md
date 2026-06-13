@@ -20,3 +20,10 @@ Copy from the feature spec and check off:
 
 - [ ] All acceptance criteria covered by automated tests
 - [ ] CI passes
+
+## Reviewer checklist
+
+- [ ] Spec linked and `status: approved`
+- [ ] All AC boxes checked
+- [ ] Tests cover every scenario
+- [ ] No new secrets / unvalidated inputs
