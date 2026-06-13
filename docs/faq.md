@@ -80,6 +80,26 @@ It was committed during template development to show how the design was reached.
 </details>
 
 <details>
+<summary><strong>What about hotfixes for a <code>done</code> feature?</strong></summary>
+
+Two cases:
+- Spec was correct, implementation had a bug → new feature spec for the fix (e.g., `F042-fix-login-rate-limit-edge.md`).
+- Spec was wrong → spec delta on the original feature, re-approve, new Progress entries.
+</details>
+
+<details>
+<summary><strong>Can I have multiple active features in parallel?</strong></summary>
+
+`STATE.md` tracks one. Pick the priority feature. If you truly need parallel work, multiple branches each with their own STATE checkout. Easier to swap `active_feature` than to coordinate two.
+</details>
+
+<details>
+<summary><strong>What about pure refactors — no behavior change?</strong></summary>
+
+No feature spec needed. PR description explains the rationale. If the refactor is architectural (changing module boundaries, swapping a library), write an ADR. Otherwise just a regular PR.
+</details>
+
+<details>
 <summary><strong>Where do I push back on this workflow?</strong></summary>
 
 If a rule causes more friction than it prevents, change it. The constitution is the contract; everything else is convention. Edit your fork.

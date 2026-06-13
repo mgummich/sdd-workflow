@@ -39,6 +39,8 @@ Artifacts per feature:
 - `spec/features/Fxxx-*.md` — feature spec including AC and Progress log
 - Optional: `spec/adr/ADR-xxx-*.md` — architecture decision
 
+**Progress log compaction:** entries older than 30 days may be collapsed into a single summary; keep the last 5 verbatim.
+
 ## 2. Quality & Testing
 
 - Every change requires automated tests.
@@ -74,7 +76,7 @@ Pass only:
 
 - `spec/01-rules-llm.md`
 - the active feature spec
-- 1–2 ADRs if the feature references them
+- 1–2 ADRs if the feature references them (add them to `load:` in STATE.md)
 
 Token efficiency: search/snippets over full files; structured output; per-feature Progress log instead of growing history.
 
