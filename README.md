@@ -85,7 +85,16 @@ Full guide: [`docs/quickstart.md`](docs/quickstart.md). Worked example: [`docs/w
 | 🚀 [Quickstart](docs/quickstart.md) | 5-minute setup |
 | 📖 [Walkthrough](docs/walkthrough.md) | One feature from spec to done |
 | ❓ [FAQ](docs/faq.md) | Design choices, common questions |
+| ⚡ [Superpowers](docs/superpowers.md) | Using the `superpowers:*` skill pack with SDD |
 | 🔧 [`spec/README.md`](spec/README.md) | In-repo workflow reference |
+
+## Related: GitHub Speckit
+
+This template and [GitHub spec-kit](https://github.com/github/spec-kit) (Speckit) solve the same problem differently. SDD here = plain Markdown + frontmatter gates. Speckit = CLI + slash commands (`/specify`, `/plan`, `/tasks`, `/implement`) + `.specify/` scaffold.
+
+Pick one. Don't run both in the same repo — sync drift and decision fatigue cost more than the optionality is worth.
+
+Switching to Speckit: `uvx --from git+https://github.com/github/spec-kit.git specify init --here --ai claude`, then migrate `spec/features/FNNN-*.md` → `specs/NNN-slug/spec.md` and delete `spec/`.
 
 ## License
 
