@@ -86,6 +86,7 @@ Full guide: [`docs/quickstart.md`](docs/quickstart.md). Worked example: [`docs/w
 | 📖 [Walkthrough](docs/walkthrough.md) | One feature from spec to done |
 | ❓ [FAQ](docs/faq.md) | Design choices, common questions |
 | ⚡ [Superpowers](docs/superpowers.md) | Using the `superpowers:*` skill pack with SDD |
+| 🔁 [Migrating](docs/migrating.md) | Retrofit SDD onto an existing project |
 | 🔧 [`spec/README.md`](spec/README.md) | In-repo workflow reference |
 
 ## Related: GitHub Speckit
